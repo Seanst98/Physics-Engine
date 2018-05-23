@@ -1,3 +1,49 @@
+C++ PHYSICS ENGINE
+Includes GJK detection with EPA for collision details
+Requires SFML 
+Developed in VS2017
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ========================================================================
     CONSOLE APPLICATION : Physics Project Overview
 ========================================================================
