@@ -6,18 +6,18 @@ Map::Map(){}
 
 Map::~Map(){}
 
-void Map::Add(Object Object)
+void Map::Add(Object* Object)
 {
 	Objects.push_back(Object);
 }
 
 void Map::Remove(unsigned int ID)
 {
-	std::vector<Object>::iterator itr;
+	auto itr = Objects.begin();
 
 	while (itr != Objects.end())
 	{
-		if (itr->ID == ID) 
+		if ((*itr)->ID == ID) 
 		{
 			Objects.erase(itr);
 			break;
@@ -37,23 +37,23 @@ int Map::Size()
 	return Objects.size();
 }
 
-Object Map::Get(unsigned int ID)
+Object* Map::Get(unsigned int ID)
 {
 	for (int i = 0; i < Objects.size(); i++)
 	{
-		if (Objects[i].ID == ID) { return Objects[i]; }
+		if (Objects[i]->ID == ID) { return Objects[i]; }
 	}
 }
 
 void Map::DrawAll(sf::RenderWindow& mainWindow)
 {
-	std::vector<Object>::iterator itr = Objects.begin();
+	auto itr = Objects.begin();
 
 	for (int i = 0; i < Objects.size(); i++)
 	{
-		sf::VertexArray *a = itr->ptr;
+		sf::VertexArray *a = (*itr)->ptr;
 
-		mainWindow.draw((*a), itr->matrix);
+		mainWindow.draw((*a), (*itr)->matrix);
 
 		itr++;
 	}
@@ -61,11 +61,11 @@ void Map::DrawAll(sf::RenderWindow& mainWindow)
 
 void Map::UpdateAll()
 {
-	std::vector<Object>::iterator itr = Objects.begin();
+	auto itr = Objects.begin();
 
 	while (itr != Objects.end())
 	{
-		itr->Update();
+		(*itr)->Update();
 		itr++;
 	}
 }

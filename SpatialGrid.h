@@ -8,6 +8,7 @@ public:
 	SpatialGrid();
 
 	void Update();
+	void AABB(int i);
 
 	void CheckBox(int, int);
 

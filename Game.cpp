@@ -1,7 +1,9 @@
-
 #pragma once
 #include "stdafx.h"
 #include "Game.h"
+#include "GJK.h"
+#include "EPA.h"
+#include "Contact.h"
 
 void Game::Start()
 {
@@ -15,18 +17,31 @@ void Game::Start()
 	font.loadFromFile("fonts/consola.ttf");
 
 	fpsText.setColor(sf::Color::Red);
-	fpsText.setPosition(10, 10);
+	fpsText.setPosition(10, 30);
 	fpsText.setFont(font);
 
-	noobjects = 0;
+	//noobjects = 0;
 	fpsavg = 0;
 
 	resManager.DefineTriangle();
+	resManager.DefineQuad();
+	resManager.DefinePentagon();
+	resManager.DefinePrzemekShape();
 
-	Object object("triangle");
-	object.ptr = resManager.Get("triangle");
+	Object *object = new Object("quad");
+
+	object->matrix.translate(500, 500);
+
+	object->ID = 0;
 
 	map.Add(object);
+
+	Object *object2 = new Object("przemek");
+
+	object2->ID = 1;
+
+	map.Add(object2);
+
 
 	//Gameloop
 	while (gameState != Game::Exiting)
@@ -57,6 +72,26 @@ void Game::GameLoop()
 					gameState = Game::Exiting;
 				}
 
+				if (currentEvent.type == sf::Event::KeyPressed)
+				{
+					if (currentEvent.key.code == sf::Keyboard::A)
+					{
+						map.Get(1)->matrix.translate(-10,0);
+					}
+					if (currentEvent.key.code == sf::Keyboard::D)
+					{
+						map.Get(1)->matrix.translate(10, 0);
+					}
+					if (currentEvent.key.code == sf::Keyboard::W)
+					{
+						map.Get(1)->matrix.translate(0, -10);
+					}
+					if (currentEvent.key.code == sf::Keyboard::S)
+					{
+						map.Get(1)->matrix.translate(0, 10);
+					}
+				}
+
 			}
 
 			mainWindow.clear(sf::Color(0, 0, 0));
@@ -65,6 +100,19 @@ void Game::GameLoop()
 
 			SpatialGrid grid;
 			grid.Update();
+
+			GJK gjk;
+
+			if (gjk.Check(map.Objects[0], map.Objects[1]))
+			{
+				EPA epa;
+				epa.Update(map.Objects[0], map.Objects[1], &gjk.simplex);
+				
+				Contact contacts;
+				contacts.getPoints(map.Objects[0], map.Objects[1], &gjk.simplex);
+			}
+
+
 
 			map.DrawAll(mainWindow);
 
