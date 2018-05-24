@@ -109,7 +109,7 @@ void Game::GameLoop()
 				epa.Update(map.Objects[0], map.Objects[1], &gjk.simplex);
 				
 				Contact contacts;
-				contacts.getPoints(map.Objects[0], map.Objects[1], &gjk.simplex);
+				contacts.getPoints(map.Objects[0], map.Objects[1], epa.normal, epa.depth);
 			}
 
 

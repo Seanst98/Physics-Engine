@@ -9,8 +9,6 @@ EPA::EPA()
 
 void EPA::Update(Object* A, Object* B, Simplex* simplex)
 {
-	sf::Vector2f normal;
-	double depth;
 
 	calcWinding(simplex);
 

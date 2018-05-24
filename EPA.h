@@ -12,6 +12,7 @@ public:
 	float distance;
 	float index;
 	sf::Vector2f normal;
+	sf::Vector2f max;   //So far purely for clipping
 };
 
 
@@ -25,5 +26,7 @@ public:
 	void calcWinding(Simplex*);
 
 	std::string winding;
+	sf::Vector2f normal;
+	float depth;
 
 };
