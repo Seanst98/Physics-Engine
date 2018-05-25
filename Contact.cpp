@@ -13,10 +13,14 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	std::vector<sf::Vector2f> A;
 	std::vector<sf::Vector2f> B;
 
-	sf::Vector2f temp1(2, 8);
+	/*sf::Vector2f temp1(2, 8);
 	sf::Vector2f temp2(6, 4);
 	sf::Vector2f temp3(9, 7);
-	sf::Vector2f temp4(5, 11);
+	sf::Vector2f temp4(5, 11);*/
+	sf::Vector2f temp1(8, 4);
+	sf::Vector2f temp2(14, 4);
+	sf::Vector2f temp3(14, 9);
+	sf::Vector2f temp4(8, 9);
 	A.push_back(temp1);
 	A.push_back(temp2);
 	A.push_back(temp3);
@@ -71,6 +75,8 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 
 	std::vector<sf::Vector2f> cp = Contact::clipping(e1, e2, normal);
 
+	std::cout << "LOL" << std::endl;
+
 }
 
 std::vector<sf::Vector2f> Contact::clipping(Edge e1, Edge e2, sf::Vector2f normal) {
@@ -123,12 +129,24 @@ std::vector<sf::Vector2f> Contact::clipping(Edge e1, Edge e2, sf::Vector2f norma
 
 	//get the reference edge normal
 	//cross product with scalar
+	//ref.cross(-1)
 	//Vec = (Vec.y*scalar, Vec.x*-scalar)
 	//scalar = -1
+
+	//OK SO if anyone reads this, this part caused a lot of problems
+	//The guide I used mentioned very little about this but it has
+	//something to do with handedness
+	//it would work for example 2 and fail the others but
+	//when using the other way he describes it works for
+	//every example but example 2
+	//HANDEDNESS IS VERY IMPORTANT FOR CHOOSING THE CORRECT
+	//ORTHOGANAL VECTOR
+	//MAY NEED TO HAVE TO CHECK THAT NORMAL POINTS FROM CONVEX A TO 
+	//CONVEX B WHICH COULD BE WHY THIS FAILS
+	int z = -1;
 	sf::Vector2f refNorm;
-	sf::Vector2f temp = ref.B - ref.A;
-	refNorm.x = temp.y * -1;
-	refNorm.y = temp.x * 1;
+	refNorm.x = -1* refv.y * z;
+	refNorm.y = refv.x * z;
 
 	//if we had to flip the incident and reference edges
 	//then we need to flip the reference edge normal to
@@ -157,10 +175,45 @@ std::vector<sf::Vector2f> Contact::clipping(Edge e1, Edge e2, sf::Vector2f norma
 
 }
 
-std::vector<sf::Vector2f> Contact::clip(sf::Vector2f a, sf::Vector2f b, sf::Vector2f c, float o) {
+std::vector<sf::Vector2f> Contact::clip(sf::Vector2f v1, sf::Vector2f v2, sf::Vector2f n, float o) {
 
 	//clips the line segment points v1, v2
 	//if they are past o along n
+
+	std::vector<sf::Vector2f> cp;
+	float d1 = Math::Dot(n, v1) - o;
+	float d2 = Math::Dot(n, v2) - o;
+
+	//if either point is past o along n
+	//then we can keep the point
+	if (d1 >= 0) {
+		cp.push_back(v1);
+	}
+	if (d2 >= 0) {
+		cp.push_back(v2);
+	}
+	
+	//finally we need to check if they
+	//are on opposing sides so that we can
+	//compute the correct point
+	if ((d1*d2) < 0) {
+		//if they are on different sides of the
+		//offset, d1 and d2 2ill be a (+) * (-)
+		//and will yield a (-) and therefore be
+		// < 0
+		//get the vector for the edge we are clipping
+		sf::Vector2f e = v2 - v1;
+
+		//compute the location along e
+		float u = d1 / (d1 - d2);
+		e = e * u;
+		e = e + v1;
+
+		//add the point
+		cp.push_back(e);
+	}
+
+	return cp;
 }
 
 Edge Contact::bestEdge(std::vector<sf::Vector2f> A, sf::Vector2f normal) {
