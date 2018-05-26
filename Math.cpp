@@ -28,6 +28,10 @@ sf::Vector2f Math::tripleProduct(sf::Vector2f A, sf::Vector2f B, sf::Vector2f C)
 
 }
 
+float Math::Magnitude(sf::Vector2f v) {
+	return (std::sqrt((v.x * v.x) + (v.y*v.y)));
+}
+
 sf::Vector2f Math::Normalise(sf::Vector2f d)
 {
 	double magnitude = (d.x * d.x) + (d.y*d.y);

@@ -17,10 +17,17 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	sf::Vector2f temp2(6, 4);
 	sf::Vector2f temp3(9, 7);
 	sf::Vector2f temp4(5, 11);*/
-	sf::Vector2f temp1(8, 4);
+	/*sf::Vector2f temp1(8, 4);
 	sf::Vector2f temp2(14, 4);
 	sf::Vector2f temp3(14, 9);
-	sf::Vector2f temp4(8, 9);
+	sf::Vector2f temp4(8, 9);*/
+	sf::Vector2f temp1(9, 4);
+	sf::Vector2f temp2(13, 3);
+	sf::Vector2f temp3(14, 13);
+	sf::Vector2f temp4(10, 14);
+	normal.x = -0.19;
+	normal.y = -0.98;
+
 	A.push_back(temp1);
 	A.push_back(temp2);
 	A.push_back(temp3);
@@ -88,7 +95,7 @@ std::vector<sf::Vector2f> Contact::clipping(Edge e1, Edge e2, sf::Vector2f norma
 
 	bool flip = false;
 
-	if (std::abs(Math::Dot((e1.B-e1.A), normal)) <= std::abs(Math::Dot((e2.B-e1.A), normal))) {
+	if (std::abs(Math::Dot((e1.B-e1.A), normal)) <= std::abs(Math::Dot((e2.B-e2.A), normal))) {
 		ref = e1;
 		inc = e2;
 	}
@@ -143,29 +150,59 @@ std::vector<sf::Vector2f> Contact::clipping(Edge e1, Edge e2, sf::Vector2f norma
 	//ORTHOGANAL VECTOR
 	//MAY NEED TO HAVE TO CHECK THAT NORMAL POINTS FROM CONVEX A TO 
 	//CONVEX B WHICH COULD BE WHY THIS FAILS
+	//Have to make sure it faces right way
+	//pv = v-p
+	//n.pv is neg then outward, pos then inward
+	//make sure it points towards the incident edge
+
+	sf::Vector2f pv = ref.B - ref.A;
+
 	int z = -1;
 	sf::Vector2f refNorm;
 	refNorm.x = -1* refv.y * z;
 	refNorm.y = refv.x * z;
 
+
+	sf::Vector3f test;
+	test.x = refv.y;
+	test.y = -refv.x;
+	test.z = 0;
+
+	int a = Math::Dot(refv, inc.B-inc.A);
+
+	if (a < 0) {
+		refNorm.x = -refNorm.x;
+		refNorm.y = -refNorm.y;
+	}
+
 	//if we had to flip the incident and reference edges
 	//then we need to flip the reference edge normal to
 	//clip properly
 
-	if (flip) {
+	/*if (flip) {
 		refNorm.x = -refNorm.x;
 		refNorm.y = -refNorm.y;
-	}
+	}*/
 
 	//get the largest depth
 	float max = Math::Dot(refNorm, ref.max);
 
 	//make sure the final points are not past this maximum
 	//remove element using std::remove func
-	if ((Math::Dot(refNorm, cp[0]) - max) < 0) {
+	/*if ((Math::Dot(refNorm, cp[0]) - max) < 0) {
 		cp.erase(cp.begin());
 	}
 	if ((Math::Dot(refNorm, cp[1]) - max) < 0) {
+		cp.erase(cp.begin() + 1);
+	}*/
+
+	float depth1 = Math::Dot(refNorm, cp[0]) - max;
+	float depth2 = Math::Dot(refNorm, cp[1]) - max;
+
+	if (depth1 < 0) {
+		cp.erase(cp.begin());
+	}
+	if (depth2 < 0) {
 		cp.erase(cp.begin() + 1);
 	}
 
