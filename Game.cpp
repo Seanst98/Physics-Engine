@@ -110,6 +110,9 @@ void Game::GameLoop()
 				
 				Contact contacts;
 				contacts.getPoints(map.Objects[0], map.Objects[1], epa.normal, epa.depth);
+
+				Resolution resolution;
+				resolution.Update(map.Objects[0], map.Objects[1], contacts.clippedpoints);
 			}
 
 

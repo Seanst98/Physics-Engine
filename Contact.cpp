@@ -82,7 +82,8 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 
 	std::vector<sf::Vector2f> cp = Contact::clipping(e1, e2, normal);
 
-	std::cout << "LOL" << std::endl;
+	clippedPoints[0].point = cp[0];
+	clippedPoints[1].point = cp[1];
 
 }
 
@@ -205,6 +206,9 @@ std::vector<sf::Vector2f> Contact::clipping(Edge e1, Edge e2, sf::Vector2f norma
 	if (depth2 < 0) {
 		cp.erase(cp.begin() + 1);
 	}
+
+	clippedPoints[0].depth = depth1;
+	clippedPoints[1].depth = depth2;
 
 	//return the valid points
 	return cp;
