@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "Game.h"
 #include "GJK.h"
+#include "Math.h"
 
 Object::Object(std::string name)
 {
@@ -27,6 +28,31 @@ std::vector<sf::Vector2f> Object::GetPoints()  //Return transformed points
 	return points;
 }
 
+sf::Vector2f Object::GetCentre()
+{
+	sf::Vector2f point;
+
+	std::vector<sf::Vector2f> points;
+	points = Game::resManager.GetPoints(type);
+
+	int sumx = 0;
+	int sumy = 0;
+
+	for (int i = 0; i < points.size(); i++) {
+
+		sumx = points[i].x + sumx;
+		sumy = points[i].y + sumy;
+	}
+
+	sumx = sumx / points.size();
+	sumy = sumy / points.size();
+
+	sf::Vector2f ret;
+	ret.x = sumx;
+	ret.y = sumy;
+
+	return ret;
+}
 /*void Object::CreateConvexHull()
 {
 	auto points = GetPoints();
@@ -138,5 +164,21 @@ float Object::Dot(sf::Vector2f A, sf::Vector2f B)
 
 void Object::Update()
 {
+
+	float rot = std::fmod(rotation, 360);
+
+	rot = 360 - rot;
+
+	matrix.rotate(rot);
+
+	matrix.translate(velocity.x*ET, velocity.y*ET);
+
+	matrix.rotate(rotation);
+
+	//float rot = Math::Magnitude(Rvelocity);a
+
+	matrix.rotate(Rvelocity*ET*180, GetCentre());
+
+	rotation += Rvelocity * ET * 180;
 
 }

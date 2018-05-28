@@ -27,17 +27,15 @@ void ResourceManager::DefineTriangle()
 
 void ResourceManager::DefineQuad()
 {
-	quad.setPrimitiveType(sf::Triangles);
+	quad.setPrimitiveType(sf::Quads);
 
 	sf::Vertex a; a.position = sf::Vector2f(0, 0);
 	sf::Vertex b; b.position = sf::Vector2f(50, 0);
 	sf::Vertex c; c.position = sf::Vector2f(50, 50);
 
-	sf::Vertex d; d.position = sf::Vector2f(0, 0);
-	sf::Vertex e; e.position = sf::Vector2f(0, 50);
-	sf::Vertex f; f.position = sf::Vector2f(50, 50);
+	sf::Vertex d; d.position = sf::Vector2f(0, 50);
 
-	quad.append(a); quad.append(b); quad.append(c); quad.append(d); quad.append(e); quad.append(f);
+	quad.append(a); quad.append(b); quad.append(c); quad.append(d);
 
 	resources.insert(std::pair<std::string, sf::VertexArray>("quad", quad));
 

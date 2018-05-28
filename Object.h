@@ -10,10 +10,16 @@ public:
 	void Update();
 	void CreateConvexHull();
 	std::vector<sf::Vector2f> GetPoints();
+	sf::Vector2f GetCentre();
 
 	std::vector<sf::Vector2f> Hull;
 
 	sf::Transform matrix;
+	sf::Vector2f velocity;
+	float Rvelocity;
+	float mass;
+	float restitution;
+	float rotation;
 
 	sf::VertexArray *ptr;
 	sf::VertexArray *Cptr;

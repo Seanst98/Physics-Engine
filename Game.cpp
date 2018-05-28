@@ -4,6 +4,7 @@
 #include "GJK.h"
 #include "EPA.h"
 #include "Contact.h"
+#include "Resolution.h"
 
 void Game::Start()
 {
@@ -31,14 +32,16 @@ void Game::Start()
 	Object *object = new Object("quad");
 
 	object->matrix.translate(500, 500);
+	object->mass = 1;
 
 	object->ID = 0;
 
 	map.Add(object);
 
-	Object *object2 = new Object("przemek");
+	Object *object2 = new Object("quad");
 
 	object2->ID = 1;
+	object2->mass = 1;
 
 	map.Add(object2);
 
@@ -76,19 +79,19 @@ void Game::GameLoop()
 				{
 					if (currentEvent.key.code == sf::Keyboard::A)
 					{
-						map.Get(1)->matrix.translate(-10,0);
+						map.Get(1)->velocity.x = map.Get(1)->velocity.x - 10;
 					}
 					if (currentEvent.key.code == sf::Keyboard::D)
 					{
-						map.Get(1)->matrix.translate(10, 0);
+						map.Get(1)->velocity.x = map.Get(1)->velocity.x + 10;
 					}
 					if (currentEvent.key.code == sf::Keyboard::W)
 					{
-						map.Get(1)->matrix.translate(0, -10);
+						map.Get(1)->velocity.y = map.Get(1)->velocity.y - 10;
 					}
 					if (currentEvent.key.code == sf::Keyboard::S)
 					{
-						map.Get(1)->matrix.translate(0, 10);
+						map.Get(1)->velocity.y = map.Get(1)->velocity.y + 10;
 					}
 				}
 
@@ -112,7 +115,7 @@ void Game::GameLoop()
 				contacts.getPoints(map.Objects[0], map.Objects[1], epa.normal, epa.depth);
 
 				Resolution resolution;
-				resolution.Update(map.Objects[0], map.Objects[1], contacts.clippedpoints);
+				resolution.Update(map.Objects[0], map.Objects[1], contacts.clippedPoints, epa.normal);
 			}
 
 

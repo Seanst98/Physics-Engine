@@ -8,6 +8,6 @@ class Resolution
 public:
 	Resolution();
 
-	void Update(Object*, Object*, std::vector<ClippedPoint>*);
+	void Update(Object*, Object*, std::vector<ClippedPoint>, sf::Vector2f);
 
 };

@@ -2,6 +2,7 @@
 #include "Contact.h"
 #include "Math.h"
 #include "EPA.h"
+#include "Game.h"
 
 Contact::Contact()
 {
@@ -71,19 +72,49 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	B->GetPoints()[3].x = 4;
 	B->GetPoints()[3].y = 5;*/
 
+	ClippedPoint x;
+
+	clippedPoints.push_back(x);
+	clippedPoints.push_back(x);
 
 	//Get the two edges
-	Edge e1 = Contact::bestEdge(A, normal);
+	Edge e1 = Contact::bestEdge(C->GetPoints(), normal);
 	sf::Vector2f temp = normal;
 	temp.y = -temp.y;
 	temp.x = -temp.x;
-	Edge e2 = Contact::bestEdge(B, temp);
+	Edge e2 = Contact::bestEdge(D->GetPoints(), temp);
 
 
 	std::vector<sf::Vector2f> cp = Contact::clipping(e1, e2, normal);
 
-	clippedPoints[0].point = cp[0];
-	clippedPoints[1].point = cp[1];
+	if (cp.size() < 2) {
+		clippedPoints[0].point = cp[0];
+		clippedPoints[1].point = cp[0];
+	}
+	else {
+		clippedPoints[0].point = cp[0];
+		clippedPoints[1].point = cp[1];
+	}
+
+
+	//COULD BOTHER WITH THIS FOR DRAWING THE NORMAL AS THE SHAPE COLLIDES
+	//FOR LIVE DEBUGGING
+
+	/*sf::VertexArray s;
+	s.setPrimitiveType(sf::Lines);
+
+	sf::Vertex t;
+
+	t.color = sf::Color::Red;
+	t.position = normal;
+	t.color = sf::Color::Blue;
+	t.position = normal;
+	t.position.x = t.position.x + 50;
+	t.position.y = t.position.y - 50;
+
+	s.append(t);
+
+	Game::mainWindow.draw(s);*/
 
 }
 

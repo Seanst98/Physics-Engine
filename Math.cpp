@@ -47,3 +47,45 @@ float Math::Dot(sf::Vector2f A, sf::Vector2f B)
 {
 	return (A.x * B.x) + (A.y * B.y);
 }
+
+float Math::Cross(sf::Vector2f A, sf::Vector2f B)
+{
+	return ((A.x * B.y) - A.y*B.x);
+}
+
+sf::Vector2f Math::Cross(sf::Vector2f A, float b) {
+	sf::Vector2f ret;
+
+	ret.x = b * A.y;
+	ret.y = -b * A.x;
+
+	return ret;
+}
+
+sf::Vector2f Math::Cross(float a, sf::Vector2f B) {
+	sf::Vector2f ret;
+
+	ret.x = -a * B.y;
+	ret.y = a * B.x;
+
+	return ret;
+}
+
+sf::Vector2f Math::GetFarthest(std::vector<sf::Vector2f> points, sf::Vector2f d)
+{
+	sf::Vector2f farthest;
+	float farDistance = -9999999999999;
+
+	for (int i = 0; i < points.size(); i++)
+	{
+		float temp = Math::Dot(d, points[i]);
+
+		if (temp > farDistance)
+		{
+			farDistance = temp;
+			farthest = points[i];
+		}
+	}
+
+	return farthest;
+}
