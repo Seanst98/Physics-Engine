@@ -72,10 +72,6 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	B->GetPoints()[3].x = 4;
 	B->GetPoints()[3].y = 5;*/
 
-	ClippedPoint x;
-
-	clippedPoints.push_back(x);
-	clippedPoints.push_back(x);
 
 	//Get the two edges
 	Edge e1 = Contact::bestEdge(C->GetPoints(), normal);
@@ -84,8 +80,22 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	temp.x = -temp.x;
 	Edge e2 = Contact::bestEdge(D->GetPoints(), temp);
 
+	ClippedPoint x;
 
-	std::vector<sf::Vector2f> cp = Contact::clipping(e1, e2, normal);
+	clippedPoints.push_back(x);
+	clippedPoints.push_back(x);
+
+
+	std::vector<sf::Vector2f> cp(2);
+	cp = Contact::clipping(e1, e2, normal);
+
+
+	//SO DAMN HACKY NO CLUE WHY I HAVE TO CHECK FOR THIS 
+	//AND NO CLUE WHY THIS WORKS TO FIX IT!!!
+	//DAMN HIESENBUGS
+	if (cp.size() == 0) {
+		cp.resize(1);
+	}
 
 	if (cp.size() < 2) {
 		clippedPoints[0].point = cp[0];

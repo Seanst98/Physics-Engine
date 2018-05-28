@@ -169,11 +169,14 @@ void Object::Update()
 
 	rot = 360 - rot;
 
-	matrix.rotate(rot);
+	matrix.rotate(rot, GetCentre());
 
 	matrix.translate(velocity.x*ET, velocity.y*ET);
 
-	matrix.rotate(rotation);
+	matrix.rotate(rotation, GetCentre());
+
+	//matrix.rotate(25 * ET, GetCentre());
+	//rotation += 25 * ET;
 
 	//float rot = Math::Magnitude(Rvelocity);a
 

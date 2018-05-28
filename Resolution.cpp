@@ -22,7 +22,7 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	//NEWTONS LAW OF RESTITUTION
 	//velBefore * restitution = velAfter
 
-	float restitution = 0.5;
+	float restitution = 0.2;
 
 	//IMPULSE
 	//instantaneous change in velocity
@@ -54,11 +54,11 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 
 	//Angular momentum impulse 
 	//r = vector from centre of mass to a point on the body (contact point)
-	sf::Vector2f rA = cp[0].point - A->GetCentre();
-	sf::Vector2f rB = cp[0].point - B->GetCentre();
+	sf::Vector2f rA = cp[0].point - (A->GetCentre() + A->GetPoints()[0]);
+	sf::Vector2f rB = cp[0].point - (B->GetCentre() + B->GetPoints()[0]);
 
-	sf::Vector2f test = A->GetCentre();
-	sf::Vector2f test1 = B->GetCentre();
+	sf::Vector2f test = A->GetCentre() + A->GetPoints()[0];
+	sf::Vector2f test1 = B->GetCentre() + B->GetPoints()[0];
 
 	//rA = Math::Normalise(rA);
 	//rB = Math::Normalise(rB);
@@ -84,9 +84,11 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 
 	impulse = j * normal;
 
-	A->Rvelocity -= (1 / ITA)*(Math::Cross(rA, impulse));
+	A->Rvelocity += (1 / ITA)*(Math::Cross(rA, impulse));
 
-	B->Rvelocity += (1 / ITA)*(Math::Cross(rB, impulse));
+	B->Rvelocity -= (1 / ITA)*(Math::Cross(rB, impulse));
+
+	int a;
 
 
 
