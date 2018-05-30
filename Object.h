@@ -10,6 +10,7 @@ public:
 	void Update();
 	void CreateConvexHull();
 	std::vector<sf::Vector2f> GetPoints();
+	sf::Vector2f GetLocalCentre();
 	sf::Vector2f GetCentre();
 
 	std::vector<sf::Vector2f> Hull;

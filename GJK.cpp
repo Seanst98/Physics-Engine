@@ -22,28 +22,6 @@ bool GJK::Check(Object* O1, Object* O2)
 	{
 		simplex.Add(support(O1, O2, d));
 
-		sf::VertexArray s;
-		s.setPrimitiveType(sf::Triangles);
-
-		for (int i = 0; i < simplex.points.size(); i++)
-		{
-			sf::Vertex temp;
-
-			if (i == 0) { temp.color = sf::Color::Red; }
-			if (i == 1) { temp.color = sf::Color::Blue; }
-			if (i == 2) { temp.color = sf::Color::Green; }
-			temp.position.x = simplex.points[i].x;
-			temp.position.y = simplex.points[i].y;
-
-			temp.position.x += 250;
-			temp.position.y += 250;
-
-			s.append(temp);
-
-		}
-
-		Game::mainWindow.draw(s);
-
 		if (Math::Dot(simplex.getLast(), d) < 0.0)
 		{
 			return false;

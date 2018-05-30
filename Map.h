@@ -16,6 +16,7 @@ public:
 
 	void DrawAll(sf::RenderWindow& renderWindow);
 	void UpdateAll();
+	void Collisions();
 
 	std::vector<Object*> Objects;
 

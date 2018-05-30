@@ -23,7 +23,7 @@ void EPA::Update(Object* A, Object* B, Simplex* simplex)
 		double d = Math::Dot(p, e.normal);
 
 		if ((d - e.distance) <= 0.01) // the tolerance should be something positive close to zero (ex. 0.00001)
-		{	
+		{
 			normal = e.normal;
 			depth = d;
 

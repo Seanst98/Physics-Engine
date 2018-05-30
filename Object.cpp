@@ -11,6 +11,8 @@ Object::Object(std::string name)
 	ptr = Game::resManager.Get(name);
 	type = name;
 
+
+
 	//CreateConvexHull();
 }
 
@@ -28,12 +30,38 @@ std::vector<sf::Vector2f> Object::GetPoints()  //Return transformed points
 	return points;
 }
 
-sf::Vector2f Object::GetCentre()
+sf::Vector2f Object::GetLocalCentre()
 {
 	sf::Vector2f point;
 
 	std::vector<sf::Vector2f> points;
 	points = Game::resManager.GetPoints(type);
+
+	int sumx = 0;
+	int sumy = 0;
+
+	for (int i = 0; i < points.size(); i++) {
+
+		sumx = points[i].x + sumx;
+		sumy = points[i].y + sumy;
+	}
+
+	sumx = sumx / points.size();
+	sumy = sumy / points.size();
+
+	sf::Vector2f ret;
+	ret.x = sumx;
+	ret.y = sumy;
+
+	return ret;
+}
+
+sf::Vector2f Object::GetCentre()
+{
+	sf::Vector2f point;
+
+	std::vector<sf::Vector2f> points;
+	points = GetPoints();
 
 	int sumx = 0;
 	int sumy = 0;
@@ -169,19 +197,19 @@ void Object::Update()
 
 	rot = 360 - rot;
 
-	matrix.rotate(rot, GetCentre());
+	matrix.rotate(rot, GetLocalCentre());
 
 	matrix.translate(velocity.x*ET, velocity.y*ET);
 
-	matrix.rotate(rotation, GetCentre());
+	matrix.rotate(rotation, GetLocalCentre());
 
 	//matrix.rotate(25 * ET, GetCentre());
 	//rotation += 25 * ET;
 
 	//float rot = Math::Magnitude(Rvelocity);a
 
-	matrix.rotate(Rvelocity*ET*180, GetCentre());
+	matrix.rotate(Rvelocity*ET, GetLocalCentre());
 
-	rotation += Rvelocity * ET * 180;
+	rotation += Rvelocity * ET;
 
 }
