@@ -2,6 +2,12 @@
 #include "stdafx.h"
 #include "ResourceManager.h"
 
+
+//***************************************************
+//VERY IMPORTANT TO MAINTAIN WINDING
+//ONLY QUAD HAS WINDING CHECKED FOR NOW
+//ANTI-CLOCKWISE STANDARD
+//***************************************************
 void ResourceManager::DefineTriangle()
 {
 	sf::Vertex a;
@@ -29,11 +35,10 @@ void ResourceManager::DefineQuad()
 {
 	quad.setPrimitiveType(sf::Quads);
 
-	sf::Vertex a; a.position = sf::Vector2f(0, 0);
-	sf::Vertex b; b.position = sf::Vector2f(50, 0);
-	sf::Vertex c; c.position = sf::Vector2f(50, 50);
-
-	sf::Vertex d; d.position = sf::Vector2f(0, 50);
+	sf::Vertex a; a.position = sf::Vector2f(0, 0); a.color = sf::Color::White;
+	sf::Vertex b; b.position = sf::Vector2f(0, 50); b.color = sf::Color::White;
+	sf::Vertex c; c.position = sf::Vector2f(50, 50); c.color = sf::Color::White;
+	sf::Vertex d; d.position = sf::Vector2f(50, 0); d.color = sf::Color::White;
 
 	quad.append(a); quad.append(b); quad.append(c); quad.append(d);
 

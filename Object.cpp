@@ -211,5 +211,4 @@ void Object::Update()
 	matrix.rotate(Rvelocity*ET, GetLocalCentre());
 
 	rotation += Rvelocity * ET;
-
 }

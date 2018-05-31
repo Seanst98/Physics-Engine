@@ -47,7 +47,7 @@ void Game::Start()
 	map.Add(object2);
 
 
-	Object *object3 = new Object("quad");
+	/*Object *object3 = new Object("quad");
 
 	object3->ID = 2;
 	object3->mass = 100000000;
@@ -58,7 +58,7 @@ void Game::Start()
 	sf::Vector2f b(0, 25);
 	object3->matrix.translate(b);
 
-	map.Add(object3);
+	map.Add(object3);*/
 
 
 	//Gameloop
@@ -117,24 +117,6 @@ void Game::GameLoop()
 			map.UpdateAll();
 
 			map.Collisions();
-
-			/*SpatialGrid grid;
-			grid.Update();
-
-			GJK gjk;
-
-			if (gjk.Check(map.Objects[0], map.Objects[1]))
-			{
-				EPA epa;
-				epa.Update(map.Objects[0], map.Objects[1], &gjk.simplex);
-				
-				Contact contacts;
-				contacts.getPoints(map.Objects[0], map.Objects[1], epa.normal, epa.depth);
-
-				Resolution resolution;
-				resolution.Update(map.Objects[0], map.Objects[1], contacts.clippedPoints, epa.normal);
-			}*/
-
 
 
 			map.DrawAll(mainWindow);

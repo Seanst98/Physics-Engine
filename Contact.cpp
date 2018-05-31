@@ -14,25 +14,25 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	std::vector<sf::Vector2f> A;
 	std::vector<sf::Vector2f> B;
 
-	normal.x = 0;
-	normal.y = -1;
+	/*normal.x = 0;
+	normal.y = -1;*/
 
 	/*sf::Vector2f temp1(8, 4);
 	sf::Vector2f temp2(14, 4);
 	sf::Vector2f temp3(14, 9);
 	sf::Vector2f temp4(8, 9);*/
 
-	sf::Vector2f temp1(2, 8);
+	/*sf::Vector2f temp1(2, 8);
 	sf::Vector2f temp2(6, 4);
 	sf::Vector2f temp3(9, 7);
-	sf::Vector2f temp4(5, 11);
+	sf::Vector2f temp4(5, 11);*/
 
 	/*sf::Vector2f temp1(9, 4);
 	sf::Vector2f temp2(13, 3);
 	sf::Vector2f temp3(14, 13);
 	sf::Vector2f temp4(10, 14);
 	normal.x = -0.19;
-	normal.y = -0.98;*/
+	normal.y = -0.98;
 
 	A.push_back(temp1);
 	A.push_back(temp2);
@@ -47,12 +47,12 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	B.push_back(temp11);
 	B.push_back(temp12);
 	B.push_back(temp13);
-	B.push_back(temp14);
+	B.push_back(temp14);*/
 
 
 	//Get the two edges
-	Edge e1 = Contact::bestEdge(A, normal);
-	Edge e2 = Contact::bestEdge(B, -normal);
+	Edge e1 = Contact::bestEdge(C->GetPoints(), normal);
+	Edge e2 = Contact::bestEdge(D->GetPoints(), -normal);
 
 	clippedPoints = Contact::clipping(e1, e2, normal);
 
@@ -99,12 +99,8 @@ std::vector<ClippedPoint> Contact::clipping(Edge e1, Edge e2, sf::Vector2f norma
 
 	cp = clip(cp[0].point, cp[1].point, -refv, -o2);
 
-	sf::Vector2f refNorm = Math::Cross(refv, -1);
-
-
-	if (flip) {
-		refNorm = -refNorm;
-	}
+	sf::Vector2f refNorm = Math::Cross(refv, 1);
+	refNorm = Math::Normalise(refNorm);
 
 	double max = Math::Dot(refNorm, ref.max);
 	
@@ -117,24 +113,6 @@ std::vector<ClippedPoint> Contact::clipping(Edge e1, Edge e2, sf::Vector2f norma
 	if (cp[0].depth < 0) {
 		cp.erase(cp.begin());
 	}
-
-
-	if (cp.size() != 0) {
-		sf::Vector2f temp(cp[0].point);
-		temp.x = temp.x / 2;
-		temp.y = temp.y / 2;
-		sf::RectangleShape line(sf::Vector2f(150, 5));
-		line.setPosition(temp);
-		sf::Color g(0, 255, 0);
-		line.setFillColor(g);
-
-		float angle = Math::Dot(refNorm, sf::Vector2f(1, 1)) / (Math::Magnitude(refNorm) * Math::Magnitude(sf::Vector2f(1, 1)));
-
-		line.rotate(angle*180);
-
-		Game::mainWindow.draw(line);
-	}
-
 
 	return cp;
 }
