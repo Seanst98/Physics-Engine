@@ -50,7 +50,7 @@ float Math::Dot(sf::Vector2f A, sf::Vector2f B)
 
 float Math::Cross(sf::Vector2f A, sf::Vector2f B)   //Float since x, y would = 0
 {
-	return ((A.x * B.y) - A.y*B.x);
+	return ((A.x * B.y) - (A.y*B.x));
 }
 
 sf::Vector2f Math::Cross(sf::Vector2f A, float b) {

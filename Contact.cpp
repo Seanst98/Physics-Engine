@@ -14,20 +14,25 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	std::vector<sf::Vector2f> A;
 	std::vector<sf::Vector2f> B;
 
-	/*sf::Vector2f temp1(2, 8);
-	sf::Vector2f temp2(6, 4);
-	sf::Vector2f temp3(9, 7);
-	sf::Vector2f temp4(5, 11);*/
+	normal.x = 0;
+	normal.y = -1;
+
 	/*sf::Vector2f temp1(8, 4);
 	sf::Vector2f temp2(14, 4);
 	sf::Vector2f temp3(14, 9);
 	sf::Vector2f temp4(8, 9);*/
-	sf::Vector2f temp1(9, 4);
+
+	sf::Vector2f temp1(2, 8);
+	sf::Vector2f temp2(6, 4);
+	sf::Vector2f temp3(9, 7);
+	sf::Vector2f temp4(5, 11);
+
+	/*sf::Vector2f temp1(9, 4);
 	sf::Vector2f temp2(13, 3);
 	sf::Vector2f temp3(14, 13);
 	sf::Vector2f temp4(10, 14);
 	normal.x = -0.19;
-	normal.y = -0.98;
+	normal.y = -0.98;*/
 
 	A.push_back(temp1);
 	A.push_back(temp2);
@@ -45,270 +50,144 @@ void Contact::getPoints(Object* C, Object* D, sf::Vector2f normal, float depth)
 	B.push_back(temp14);
 
 
-
-	//TTTTTEEEEEEEEEEEEESSSSSSTTTTTTs
-
-	/*A->GetPoints()[0].x = 8;
-	A->GetPoints()[0].y = 4;
-
-	A->GetPoints()[1].x = 14;
-	A->GetPoints()[1].y = 4;
-
-	A->GetPoints()[2].x = 14;
-	A->GetPoints()[2].y = 9;
-
-	A->GetPoints()[3].x = 8;
-	A->GetPoints()[3].y = 9;
-
-	B->GetPoints()[0].x = 4;
-	B->GetPoints()[0].y = 2;
-
-	B->GetPoints()[1].x = 12;
-	B->GetPoints()[1].y = 2;
-
-	B->GetPoints()[2].x = 12;
-	B->GetPoints()[2].y = 5;
-
-	B->GetPoints()[3].x = 4;
-	B->GetPoints()[3].y = 5;*/
-
-
 	//Get the two edges
-	Edge e1 = Contact::bestEdge(C->GetPoints(), normal);
-	sf::Vector2f temp = normal;
-	temp.y = -temp.y;
-	temp.x = -temp.x;
-	Edge e2 = Contact::bestEdge(D->GetPoints(), temp);
+	Edge e1 = Contact::bestEdge(A, normal);
+	Edge e2 = Contact::bestEdge(B, -normal);
 
-	ClippedPoint x;
-
-	clippedPoints.push_back(x);
-	clippedPoints.push_back(x);
+	clippedPoints = Contact::clipping(e1, e2, normal);
 
 
-	std::vector<sf::Vector2f> cp(2);
-	cp = Contact::clipping(e1, e2, normal);
+	sf::CircleShape circle;
 
+	for (int i = 0; i < clippedPoints.size(); i++) {
+		circle.setRadius(10);
+		sf::Vector2f temp(circle.getRadius(), circle.getRadius());
+		//circle.setOrigin(circle.getOrigin() + temp);
+		circle.setPosition(clippedPoints[i].point - temp);
+		sf::Color c(0, 0, 255);
 
-	//SO DAMN HACKY NO CLUE WHY I HAVE TO CHECK FOR THIS 
-	//AND NO CLUE WHY THIS WORKS TO FIX IT!!!
-	//DAMN HIESENBUGS
-	if (cp.size() == 0) {
-		cp.resize(1);
+		circle.setFillColor(c);
+
+		Game::mainWindow.draw(circle);
 	}
-
-	if (cp.size() < 2) {
-		clippedPoints[0].point = cp[0];
-		clippedPoints[1].point = cp[0];
-	}
-	else {
-		clippedPoints[0].point = cp[0];
-		clippedPoints[1].point = cp[1];
-	}
-
-
-	//COULD BOTHER WITH THIS FOR DRAWING THE NORMAL AS THE SHAPE COLLIDES
-	//FOR LIVE DEBUGGING
-
-	/*sf::VertexArray s;
-	s.setPrimitiveType(sf::Lines);
-
-	sf::Vertex t;
-
-	t.color = sf::Color::Red;
-	t.position = normal;
-	t.color = sf::Color::Blue;
-	t.position = normal;
-	t.position.x = t.position.x + 50;
-	t.position.y = t.position.y - 50;
-
-	s.append(t);
-
-	Game::mainWindow.draw(s);*/
 
 }
 
-std::vector<sf::Vector2f> Contact::clipping(Edge e1, Edge e2, sf::Vector2f normal) {
+std::vector<ClippedPoint> Contact::clipping(Edge e1, Edge e2, sf::Vector2f normal) {
 
-	//Need the reference edge and the incident edge
-	//Reference edge is the edge most perpendicular to the separation normal
-	Edge ref;
-	Edge inc;
-
+	Edge ref, inc;
 	bool flip = false;
 
-	if (std::abs(Math::Dot((e1.B-e1.A), normal)) <= std::abs(Math::Dot((e2.B-e2.A), normal))) {
+	if (std::abs(Math::Dot(e1.B - e1.A, normal)) <= std::abs(Math::Dot(e2.B - e2.A, normal))) {
 		ref = e1;
 		inc = e2;
 	}
 	else {
 		ref = e2;
 		inc = e1;
-
-		//We need to set a flag indicating that the reference 
-		//and incident edge were flipped so that when we do the final
-		//clip operation, we use the right edge normal
 		flip = true;
-
 	}
 
 	sf::Vector2f refv = ref.B - ref.A;
 	refv = Math::Normalise(refv);
 
-	float o1 = Math::Dot(ref.A, refv);
-	//clip the incident edge by the first
-	//vertex of the reference edge
+	double o1 = Math::Dot(refv, ref.A);
 
-	std::vector<sf::Vector2f> cp = clip(inc.A, inc.B, refv, o1);
-	//if we dont have 2 points left then fail
+	std::vector<ClippedPoint> cp = clip(inc.A, inc.B, refv, o1);
 
-	if (cp.size() < 2) { return cp; }
+	double o2 = Math::Dot(refv, ref.B);
 
-	//clip whats left of the incident edge by the
-	//second vertex of the reference edge
-	//but we need to clip in the opposite direction
-	//so we flip the direction and offset
+	cp = clip(cp[0].point, cp[1].point, -refv, -o2);
 
-	float o2 = Math::Dot(refv, ref.B);
-
-	cp = clip(cp[0], cp[1], -refv, -o2);
-	//if we dont have 2 points then fail
-
-	if (cp.size() < 2) { return cp; }
-
-	//get the reference edge normal
-	//cross product with scalar
-	//ref.cross(-1)
-	//Vec = (Vec.y*scalar, Vec.x*-scalar)
-	//scalar = -1
-
-	//OK SO if anyone reads this, this part caused a lot of problems
-	//The guide I used mentioned very little about this but it has
-	//something to do with handedness
-	//it would work for example 2 and fail the others but
-	//when using the other way he describes it works for
-	//every example but example 2
-	//HANDEDNESS IS VERY IMPORTANT FOR CHOOSING THE CORRECT
-	//ORTHOGANAL VECTOR
-	//MAY NEED TO HAVE TO CHECK THAT NORMAL POINTS FROM CONVEX A TO 
-	//CONVEX B WHICH COULD BE WHY THIS FAILS
-	//Have to make sure it faces right way
-	//pv = v-p
-	//n.pv is neg then outward, pos then inward
-	//make sure it points towards the incident edge
-
-	sf::Vector2f pv = ref.B - ref.A;
-
-	int z = -1;
-	sf::Vector2f refNorm;
-	refNorm.x = -1* refv.y * z;
-	refNorm.y = refv.x * z;
+	sf::Vector2f refNorm = Math::Cross(refv, -1);
 
 
-	sf::Vector3f test;
-	test.x = refv.y;
-	test.y = -refv.x;
-	test.z = 0;
-
-	int a = Math::Dot(refv, inc.B-inc.A);
-
-	if (a < 0) {
-		refNorm.x = -refNorm.x;
-		refNorm.y = -refNorm.y;
+	if (flip) {
+		refNorm = -refNorm;
 	}
 
-	//if we had to flip the incident and reference edges
-	//then we need to flip the reference edge normal to
-	//clip properly
+	double max = Math::Dot(refNorm, ref.max);
+	
+	cp[0].depth = Math::Dot(refNorm, cp[0].point) - max;
+	cp[1].depth = Math::Dot(refNorm, cp[1].point) - max;
 
-	/*if (flip) {
-		refNorm.x = -refNorm.x;
-		refNorm.y = -refNorm.y;
-	}*/
-
-	//get the largest depth
-	float max = Math::Dot(refNorm, ref.max);
-
-	//make sure the final points are not past this maximum
-	//remove element using std::remove func
-	/*if ((Math::Dot(refNorm, cp[0]) - max) < 0) {
-		cp.erase(cp.begin());
-	}
-	if ((Math::Dot(refNorm, cp[1]) - max) < 0) {
-		cp.erase(cp.begin() + 1);
-	}*/
-
-	float depth1 = Math::Dot(refNorm, cp[0]) - max;
-	float depth2 = Math::Dot(refNorm, cp[1]) - max;
-
-	if (depth1 < 0) {
-		cp.erase(cp.begin());
-	}
-	if (depth2 < 0) {
+	if (cp[1].depth < 0) {
 		cp.erase(cp.begin() + 1);
 	}
+	if (cp[0].depth < 0) {
+		cp.erase(cp.begin());
+	}
 
-	clippedPoints[0].depth = depth1;
-	clippedPoints[1].depth = depth2;
 
-	//return the valid points
+	if (cp.size() != 0) {
+		sf::Vector2f temp(cp[0].point);
+		temp.x = temp.x / 2;
+		temp.y = temp.y / 2;
+		sf::RectangleShape line(sf::Vector2f(150, 5));
+		line.setPosition(temp);
+		sf::Color g(0, 255, 0);
+		line.setFillColor(g);
+
+		float angle = Math::Dot(refNorm, sf::Vector2f(1, 1)) / (Math::Magnitude(refNorm) * Math::Magnitude(sf::Vector2f(1, 1)));
+
+		line.rotate(angle*180);
+
+		Game::mainWindow.draw(line);
+	}
+
+
 	return cp;
-
-
 }
 
-std::vector<sf::Vector2f> Contact::clip(sf::Vector2f v1, sf::Vector2f v2, sf::Vector2f n, float o) {
+std::vector<ClippedPoint> Contact::clip(sf::Vector2f v1, sf::Vector2f v2, sf::Vector2f n, float o) {
+	std::vector<ClippedPoint> cp;
 
-	//clips the line segment points v1, v2
-	//if they are past o along n
+	double d1 = Math::Dot(n, v1) - o;
+	double d2 = Math::Dot(n, v2) - o;
 
-	std::vector<sf::Vector2f> cp;
-	float d1 = Math::Dot(n, v1) - o;
-	float d2 = Math::Dot(n, v2) - o;
-
-	//if either point is past o along n
-	//then we can keep the point
 	if (d1 >= 0) {
-		cp.push_back(v1);
+		ClippedPoint a;
+		a.point = v1;
+		a.depth = 0;
+		cp.push_back(a);
 	}
 	if (d2 >= 0) {
-		cp.push_back(v2);
+		ClippedPoint a;
+		a.point = v2;
+		a.depth = 0;
+		cp.push_back(a);
 	}
-	
-	//finally we need to check if they
-	//are on opposing sides so that we can
-	//compute the correct point
-	if ((d1*d2) < 0) {
-		//if they are on different sides of the
-		//offset, d1 and d2 2ill be a (+) * (-)
-		//and will yield a (-) and therefore be
-		// < 0
-		//get the vector for the edge we are clipping
+
+	if (d1*d2 < 0) {
 		sf::Vector2f e = v2 - v1;
 
-		//compute the location along e
-		float u = d1 / (d1 - d2);
-		e = e * u;
+		double u = d1 / (d1 - d2);
+
+		e.x = e.x * u;
+		e.y = e.y * u;
+
 		e = e + v1;
 
-		//add the point
-		cp.push_back(e);
+		ClippedPoint a;
+		a.point = e;
+		a.depth = 0;
+
+		cp.push_back(a);
+
 	}
 
 	return cp;
+
 }
 
 Edge Contact::bestEdge(std::vector<sf::Vector2f> A, sf::Vector2f normal) {
 	//FINDING THE FEATURES
 	int index = 0;
 	int max = -999999;
-	//int c = A->GetPoints().size();
-	int c = A.size();
-	//for (int i = 0; i < A->GetPoints().size(); i++) {
 	for (int i = 0; i < A.size(); i++) {
 
 		//float proj = Math::Dot(A->GetPoints()[i], normal);
-		float proj = Math::Dot(A[i], normal);
+		float proj = Math::Dot(normal, A[i]);
 
 		if (proj > max) {
 			max = proj;
@@ -321,21 +200,6 @@ Edge Contact::bestEdge(std::vector<sf::Vector2f> A, sf::Vector2f normal) {
 	sf::Vector2f v = A[index];
 	sf::Vector2f v1;   //v.next could implement a next func
 	sf::Vector2f v0;   //v.prev 
-
-					   //Wrap around if vertex is end of array
-	/*if (index == A->GetPoints().size() - 1) {
-		v1 = A->GetPoints()[0];
-	}
-	else {
-		v1 = A->GetPoints()[index + 1];
-	}
-
-	if (index == 0) {
-		v0 = A->GetPoints()[A->GetPoints().size() - 1];
-	}
-	else {
-		v0 = A->GetPoints()[index - 1];
-	}*/
 
 	if (index == A.size() - 1) {
 		v1 = A[0];
@@ -358,14 +222,10 @@ Edge Contact::bestEdge(std::vector<sf::Vector2f> A, sf::Vector2f normal) {
 	l = Math::Normalise(l);
 	r = Math::Normalise(r);
 
-
-	//The edge that is most perpendicular to normal will have a dot prod closer
-	//to zero
-
-	//Might be worth giving Edge its own header file but this shouldnt affect performance
-	//significantly. More like a code cleanup type deal
-	//Edge(maxVertex, edgeVertex1, edgeVertex2)
 	Edge edge;
+
+	float a = Math::Dot(r, normal);
+	float b = Math::Dot(l, normal);
 
 	if (Math::Dot(r, normal) <= Math::Dot(l, normal)) {
 		
