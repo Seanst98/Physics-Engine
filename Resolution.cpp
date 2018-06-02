@@ -11,87 +11,72 @@ Resolution::Resolution()
 void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::Vector2f normal)
 {
 
-	/*for (int i = 0; i < cp.size(); i++) {
-		sf::Vector2f relV = B->velocity - A->velocity;
+	//C: JV + b = 0
+	//V (6 by 1) velocity vector
+	//J (1 by 6) Jacobian
+	//b is only present when wanting to introduce energy
 
-		float contactVel = Math::Dot(relV, normal);
+	//POSSIBLY WORTH INVESTING IN MATRIX CLASS
 
+	if (cp.size() == 0) {
+		return;
+	}
 
-		if (contactVel > 0) {
-			return;
-		}
+	if (cp.size() == 2) {
+		cp[0].point = cp[1].point + cp[0].point;
+		cp[0].point.x = cp[0].point.x / 2;
+		cp[0].point.y = cp[0].point.y / 2;
+	}
 
-		//NEWTONS LAW OF RESTITUTION
-		//velBefore * restitution = velAfter
+	sf::Vector2f relV = B->velocity - A->velocity;
 
-		float restitution = 0.5;
-
-		//IMPULSE
-		//instantaneous change in velocity
-		//velocityNew = VelocityOld * Impulse
-		//velocityNew = velocityOld + Imupulse(Direction) 
-		//^^ allows for pointing vector in one direction or another
-
-		//sf::Vector2f velNew = velOld + impulse(direction);
+	float contactVel = Math::Dot(relV, normal);
 
 
+	if (contactVel > 0) {
+		return;
+	}
 
+	//NEWTONS LAW OF RESTITUTION
+	//velBefore * restitution = velAfter
 
+	float restitution = 0.5;
 
-		//MOMENTUM
-		//momentum = mass * velocity
-		//impulse = momentumAfter - momentumBefore
+	//REDO OF ANGULAR CALCULATION
 
-		float j;
-
-		float temp;
-		float temp1;
-		float temp2;
-
-		j = -(1 + restitution)*contactVel;
-		j /= (1 / A->mass) + (1 / B->mass);
-
-		//float impulse = (-(1 + restitution)*(relVdotn)) / ((1 / A->mass) + (1 / B->mass));
-		sf::Vector2f impulse = j * normal;
-
-		//A->velocity -= impulse / A->mass;
-		//B->velocity += impulse / B->mass;
-
-		//REDO OF ANGULAR CALCULATION
-
-		sf::Vector2f rA = cp[i].point - A->GetCentre();
-		sf::Vector2f rB = cp[i].point - B->GetCentre();
+	sf::Vector2f rA = cp[0].point - A->GetCentre();
+	sf::Vector2f rB = cp[0].point - B->GetCentre();
 
 
 
-		float wA = A->GetPoints()[2].x - A->GetPoints()[0].x;
-		float hA = A->GetPoints()[2].y - A->GetPoints()[0].y;
-		float IA = A->mass*((hA*hA) + (wA * wA)) / 12;
+	float wA = A->GetPoints()[2].x - A->GetPoints()[0].x;
+	float hA = A->GetPoints()[2].y - A->GetPoints()[0].y;
+	float IA = A->mass*((hA*hA) + (wA * wA)) / 12;
 
-		float wB = B->GetPoints()[2].x - B->GetPoints()[0].x;
-		float hB = B->GetPoints()[2].y - B->GetPoints()[0].y;
-		float IB = B->mass*((hB*hB) + (wB * wB)) / 12;
+	float wB = B->GetPoints()[2].x - B->GetPoints()[0].x;
+	float hB = B->GetPoints()[2].y - B->GetPoints()[0].y;
+	float IB = B->mass*((hB*hB) + (wB * wB)) / 12;
 
 
 
-		j = -(1 + restitution)*(Math::Dot(relV, normal));
+	float j = -(1 + restitution)*(Math::Dot(relV, normal));
 
-		temp = Math::Dot(normal, normal)*((1 / A->mass) + (1 / B->mass));
+	float temp = Math::Dot(normal, normal)*((1 / A->mass) + (1 / B->mass));
 
-		//Something wrong with temp1 and temp2
-		//Maybe should reserve negative sign after squaring as temp1 and temp2 allow for cancelling
+	//Something wrong with temp1 and temp2
+	//Maybe should reserve negative sign after squaring as temp1 and temp2 allow for cancelling
 
-		temp1 = ((Math::Dot(Math::Perpendicular(rA), normal)) * (Math::Dot(Math::Perpendicular(rA), normal))) / IA;
-		temp2 = ((Math::Dot(Math::Perpendicular(rB), normal)) * (Math::Dot(Math::Perpendicular(rB), normal))) / IB;
+	double temp1 = ((Math::Dot(Math::Perpendicular(rA), normal)) * (Math::Dot(Math::Perpendicular(rA), normal))) / IA;
+	double temp2 = ((Math::Dot(Math::Perpendicular(rB), normal)) * (Math::Dot(Math::Perpendicular(rB), normal))) / IB;
 
-		j = j / (temp + temp1 + temp2);
+	j = j / (temp + temp1 + temp2);
 
-		A->velocity -= (j / (A->mass))*normal;
-		B->velocity += (j / (B->mass))*normal;
 
-		A->Rvelocity -= (Math::Dot((Math::Perpendicular(rA)), j * normal)) / IA;
-		B->Rvelocity += (Math::Dot((Math::Perpendicular(rB)), j * normal)) / IB;
-	}*/
+	A->velocity -= (j / (A->mass))*normal;
+	B->velocity += (j / (B->mass))*normal;
+
+	A->Rvelocity += (Math::Dot((Math::Perpendicular(rA)), j * normal)) / IA;
+	B->Rvelocity -= (Math::Dot((Math::Perpendicular(rB)), j * normal)) / IB;
 
 
 }

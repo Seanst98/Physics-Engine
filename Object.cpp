@@ -6,10 +6,11 @@
 #include "GJK.h"
 #include "Math.h"
 
-Object::Object(std::string name)
+Object::Object(std::string name, std::string kin)
 {
 	ptr = Game::resManager.Get(name);
 	type = name;
+	kind = kin;
 
 
 
@@ -193,22 +194,27 @@ float Object::Dot(sf::Vector2f A, sf::Vector2f B)
 void Object::Update()
 {
 
-	float rot = std::fmod(rotation, 360);
 
-	rot = 360 - rot;
+	if (kind != "wall") {
+		float rot = std::fmod(rotation, 360);
 
-	matrix.rotate(rot, GetLocalCentre());
+		rot = 360 - rot;
 
-	matrix.translate(velocity.x*ET, velocity.y*ET);
+		matrix.rotate(rot, GetLocalCentre());
 
-	matrix.rotate(rotation, GetLocalCentre());
+		matrix.translate(velocity.x*ET, velocity.y*ET);
 
-	//matrix.rotate(25 * ET, GetCentre());
-	//rotation += 25 * ET;
+		velocity.y += ET * 1000/mass;
 
-	//float rot = Math::Magnitude(Rvelocity);a
+		matrix.rotate(rotation, GetLocalCentre());
 
-	matrix.rotate(Rvelocity*ET, GetLocalCentre());
+		//matrix.rotate(25 * ET, GetCentre());
+		//rotation += 25 * ET;
 
-	rotation += Rvelocity * ET;
+		//float rot = Math::Magnitude(Rvelocity);a
+
+		matrix.rotate(Rvelocity*ET, GetLocalCentre());
+
+		rotation += Rvelocity * ET;
+	}
 }

@@ -29,25 +29,29 @@ void Game::Start()
 	resManager.DefinePentagon();
 	resManager.DefinePrzemekShape();
 
-	Object *object = new Object("quad");
+	Object *object = new Object("quad", "block");
 
 	object->matrix.translate(500, 500);
-	object->mass = 1;
+	object->matrix.rotate(30);
+	object->rotation += 30;
+	object->mass = 25;
 
 	object->ID = 0;
 
 	map.Add(object);
 
-	Object *object2 = new Object("quad");
+	Object *object2 = new Object("quad", "block");
 
 	object2->matrix.translate(500, 400);
+	object2->matrix.rotate(45);
+	object2->rotation += 45;
 	object2->ID = 1;
-	object2->mass = 1;
+	object2->mass = 25;
 
 	map.Add(object2);
 
 
-	/*Object *object3 = new Object("quad");
+	Object *object3 = new Object("quad", "wall");
 
 	object3->ID = 2;
 	object3->mass = 100000000;
@@ -58,7 +62,26 @@ void Game::Start()
 	sf::Vector2f b(0, 25);
 	object3->matrix.translate(b);
 
-	map.Add(object3);*/
+	map.Add(object3);
+
+
+	Object *object4 = new Object("quad", "wall");
+	object4->ID = 3;
+	object4->mass = 10000000;
+	sf::Vector2f c(1, 13);
+	object4->matrix.scale(c);
+
+	map.Add(object4);
+
+	Object *object5 = new Object("quad", "wall");
+	object5->ID = 4;
+	object5->mass = 10000000;
+	sf::Vector2f d(1, 13);
+	object5->matrix.translate(1250, 0);
+	object5->matrix.scale(d);
+
+	map.Add(object5);
+
 
 
 	//Gameloop

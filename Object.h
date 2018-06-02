@@ -5,7 +5,7 @@ class Object
 {
 public:
 
-	Object(std::string);
+	Object(std::string, std::string);
 
 	void Update();
 	void CreateConvexHull();
@@ -21,6 +21,7 @@ public:
 	float mass;
 	float restitution;
 	float rotation;
+	std::string kind;
 
 	sf::VertexArray *ptr;
 	sf::VertexArray *Cptr;
