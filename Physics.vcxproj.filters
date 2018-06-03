@@ -36,9 +36,6 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SpatialGrid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -55,6 +52,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resolution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,9 +77,6 @@
     <ClCompile Include="Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SpatialGrid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GJK.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -93,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resolution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

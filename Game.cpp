@@ -32,21 +32,22 @@ void Game::Start()
 	Object *object = new Object("quad", "block");
 
 	object->matrix.translate(500, 500);
-	object->matrix.rotate(30);
-	object->rotation += 30;
-	object->mass = 25;
+	//object->matrix.rotate(30);
+	//object->rotation += 30;
+	object->mass = 10;
 
 	object->ID = 0;
 
 	map.Add(object);
 
+
 	Object *object2 = new Object("quad", "block");
 
 	object2->matrix.translate(500, 400);
-	object2->matrix.rotate(45);
-	object2->rotation += 45;
+	//object2->matrix.rotate(45);
+	//object2->rotation += 45;
 	object2->ID = 1;
-	object2->mass = 25;
+	object2->mass = 10;
 
 	map.Add(object2);
 
@@ -81,6 +82,17 @@ void Game::Start()
 	object5->matrix.scale(d);
 
 	map.Add(object5);
+
+	Object *object6 = new Object("quad", "wall");
+	object6->ID = 5;
+	object6->mass = 10000000;
+	sf::Vector2f e(23, 1);
+	object6->matrix.translate(75, 50);
+	object6->matrix.scale(e);
+
+	map.Add(object6);
+
+	noobjects = noobjects + 6;
 
 
 
@@ -130,6 +142,18 @@ void Game::GameLoop()
 					if (currentEvent.key.code == sf::Keyboard::S)
 					{
 						map.Get(1)->velocity.y = map.Get(1)->velocity.y + 10;
+					}
+					if (currentEvent.key.code == sf::Keyboard::Q)
+					{
+						Object *object = new Object("quad", "block");
+
+						object->matrix.translate(500, 400);
+						//object2->matrix.rotate(45);
+						//object2->rotation += 45;
+						object->ID = noobjects;
+						object->mass = 10;
+
+						map.Add(object);
 					}
 				}
 

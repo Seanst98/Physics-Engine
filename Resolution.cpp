@@ -2,6 +2,7 @@
 #include "Resolution.h"
 #include "Math.h"
 #include "Contact.h"
+#include <algorithm>
 
 Resolution::Resolution()
 {
@@ -40,7 +41,7 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	//NEWTONS LAW OF RESTITUTION
 	//velBefore * restitution = velAfter
 
-	float restitution = 0.5;
+	float restitution = 1;
 
 	//REDO OF ANGULAR CALCULATION
 
@@ -75,8 +76,43 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	A->velocity -= (j / (A->mass))*normal;
 	B->velocity += (j / (B->mass))*normal;
 
-	A->Rvelocity += (Math::Dot((Math::Perpendicular(rA)), j * normal)) / IA;
-	B->Rvelocity -= (Math::Dot((Math::Perpendicular(rB)), j * normal)) / IB;
+	A->Rvelocity += (Math::Dot((Math::Perpendicular(rA)), j * normal)) / (IA/10);
+	B->Rvelocity -= (Math::Dot((Math::Perpendicular(rB)), j * normal)) / (IB/10);
+
+
+	//FRICTION
+	sf::Vector2f tangentVelocity = relV - (Math::Dot(relV, normal) * normal);
+	sf::Vector2f tangentVector = Math::Normalise(tangentVelocity);
+
+	//CORRECTIONS
+	float penAllow = 0.1;
+	float percent = 0.5;
+
+	float q = std::max(cp[0].depth - penAllow, 0.0f);
+	float r = (1 / A->mass) + (1 / B->mass);
+
+	sf::Vector2f correction = (q/r)*percent*normal;
+
+
+	float rot = std::fmod(A->rotation, 360);
+
+	rot = 360 - rot;
+
+	A->matrix.rotate(rot, A->GetLocalCentre());
+
+	A->matrix.translate(-(1 / A->mass)*correction);
+
+	A->matrix.rotate(A->rotation, A->GetLocalCentre());
+
+	rot = std::fmod(B->rotation, 360);
+
+	rot = 360 - rot;
+
+	B->matrix.rotate(rot, B->GetLocalCentre());
+
+	B->matrix.translate(-(1 / B->mass)*correction);
+
+	B->matrix.rotate(B->rotation, B->GetLocalCentre());
 
 
 }

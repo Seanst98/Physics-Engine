@@ -15,8 +15,8 @@ void ResourceManager::DefineTriangle()
 	sf::Vertex c;
 
 	a.position = sf::Vector2f(0, 0);
-	b.position = sf::Vector2f(50, 0);
-	c.position = sf::Vector2f(50, 50);
+	b.position = sf::Vector2f(10, 0);
+	c.position = sf::Vector2f(10, 10);
 
 	a.color = sf::Color::Green;
 	b.color = sf::Color::Blue;

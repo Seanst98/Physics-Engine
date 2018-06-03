@@ -76,6 +76,8 @@ void Map::UpdateAll()
 
 void Map::Collisions()
 {
+	int index1 = 0;
+	int index2 = 0;
 	
 	for (int i = 0; i < Objects.size(); i++) {
 
@@ -84,21 +86,22 @@ void Map::Collisions()
 			if (i != j) {
 
 				SpatialGrid grid;
-				grid.Update();
 
-				GJK gjk;
+				//if (grid.Update()) {
+					GJK gjk;
 
-				if (gjk.Check(Objects[i], Objects[j])) {
-					EPA epa;
-					epa.Update(Objects[i], Objects[j], &gjk.simplex);
+					if (gjk.Check(Objects[i], Objects[j])) {
+						EPA epa;
+						epa.Update(Objects[i], Objects[j], &gjk.simplex);
 
-					Contact contacts;
-					contacts.getPoints(Objects[i], Objects[j], epa.normal, epa.depth);
+						Contact contacts;
+						contacts.getPoints(Objects[i], Objects[j], epa.normal, epa.depth);
 
-					Resolution resolution;
-					resolution.Update(Objects[i], Objects[j], contacts.clippedPoints, epa.normal);
+						Resolution resolution;
+						resolution.Update(Objects[i], Objects[j], contacts.clippedPoints, epa.normal);
+					}
 				}
-			}
+			//}
 		}
 	}
 	/*auto itr = Objects.begin();

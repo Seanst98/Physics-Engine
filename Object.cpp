@@ -204,7 +204,7 @@ void Object::Update()
 
 		matrix.translate(velocity.x*ET, velocity.y*ET);
 
-		velocity.y += ET * 1000/mass;
+		velocity.y += ET * 1000;
 
 		matrix.rotate(rotation, GetLocalCentre());
 
