@@ -41,7 +41,7 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	//NEWTONS LAW OF RESTITUTION
 	//velBefore * restitution = velAfter
 
-	float restitution = 1;
+	float restitution = 0.8;
 
 	//REDO OF ANGULAR CALCULATION
 
@@ -76,8 +76,8 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	A->velocity -= (j / (A->mass))*normal;
 	B->velocity += (j / (B->mass))*normal;
 
-	A->Rvelocity += (Math::Dot((Math::Perpendicular(rA)), j * normal)) / (IA/10);
-	B->Rvelocity -= (Math::Dot((Math::Perpendicular(rB)), j * normal)) / (IB/10);
+	A->Rvelocity += (Math::Dot((Math::Perpendicular(rA)), j * normal)) / IA;
+	B->Rvelocity -= (Math::Dot((Math::Perpendicular(rB)), j * normal)) / IB;
 
 
 	//FRICTION
@@ -85,8 +85,8 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	sf::Vector2f tangentVector = Math::Normalise(tangentVelocity);
 
 	//CORRECTIONS
-	float penAllow = 0.1;
-	float percent = 0.5;
+	float penAllow = 0.001;
+	float percent = 0.2;
 
 	float q = std::max(cp[0].depth - penAllow, 0.0f);
 	float r = (1 / A->mass) + (1 / B->mass);
@@ -110,7 +110,7 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 
 	B->matrix.rotate(rot, B->GetLocalCentre());
 
-	B->matrix.translate(-(1 / B->mass)*correction);
+	B->matrix.translate((1 / B->mass)*correction);
 
 	B->matrix.rotate(B->rotation, B->GetLocalCentre());
 
