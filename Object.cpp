@@ -13,7 +13,6 @@ Object::Object(std::string name, std::string kin)
 	kind = kin;
 
 
-
 	//CreateConvexHull();
 }
 
@@ -79,6 +78,23 @@ sf::Vector2f Object::GetCentre()
 	sf::Vector2f ret;
 	ret.x = sumx;
 	ret.y = sumy;
+
+	return ret;
+}
+
+sf::Vector2f Object::GetWidthHeight() {
+
+	sf::Vector2f ret;
+
+	float rot = std::fmod(rotation, 360);
+
+	rot = 360 - rot;
+
+	matrix.rotate(rot, GetLocalCentre());
+
+	ret = GetPoints()[2] - GetPoints()[0];
+
+	matrix.rotate(rotation, GetLocalCentre());
 
 	return ret;
 }
@@ -204,7 +220,7 @@ void Object::Update()
 
 		matrix.translate(velocity.x*ET, velocity.y*ET);
 
-		velocity.y += ET * 1000;
+		//velocity.y += ET * 100;
 
 		matrix.rotate(rotation, GetLocalCentre());
 

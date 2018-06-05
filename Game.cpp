@@ -31,7 +31,7 @@ void Game::Start()
 
 	Object *object = new Object("quad", "block");
 
-	object->matrix.translate(500, 500);
+	object->matrix.translate(100, 200);
 	//object->matrix.rotate(30);
 	//object->rotation += 30;
 	object->mass = 10;
@@ -44,8 +44,8 @@ void Game::Start()
 	Object *object2 = new Object("quad", "block");
 
 	object2->matrix.translate(500, 400);
-	//object2->matrix.rotate(45);
-	//object2->rotation += 45;
+	object2->matrix.rotate(5);
+	object2->rotation += 5;
 	object2->ID = 1;
 	object2->mass = 10;
 

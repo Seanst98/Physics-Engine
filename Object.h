@@ -12,6 +12,7 @@ public:
 	std::vector<sf::Vector2f> GetPoints();
 	sf::Vector2f GetLocalCentre();
 	sf::Vector2f GetCentre();
+	sf::Vector2f GetWidthHeight();
 
 	std::vector<sf::Vector2f> Hull;
 
@@ -22,6 +23,8 @@ public:
 	float restitution;
 	float rotation;
 	std::string kind;
+	float width;
+	float height;
 
 	sf::VertexArray *ptr;
 	sf::VertexArray *Cptr;

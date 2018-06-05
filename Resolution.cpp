@@ -50,34 +50,33 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 
 
 
-	float wA = A->GetPoints()[2].x - A->GetPoints()[0].x;
-	float hA = A->GetPoints()[2].y - A->GetPoints()[0].y;
+	float wA = A->GetWidthHeight().x;
+	float hA = A->GetWidthHeight().y;
 	float IA = A->mass*((hA*hA) + (wA * wA)) / 12;
 
-	float wB = B->GetPoints()[2].x - B->GetPoints()[0].x;
-	float hB = B->GetPoints()[2].y - B->GetPoints()[0].y;
+	float wB = B->GetWidthHeight().x;
+	float hB = B->GetWidthHeight().y;
 	float IB = B->mass*((hB*hB) + (wB * wB)) / 12;
 
 
+	sf::Vector2f va = A->velocity + Math::Cross(A->Rvelocity, rA);
+	sf::Vector2f vb = B->velocity + Math::Cross(B->Rvelocity, rB);
 
-	float j = -(1 + restitution)*(Math::Dot(relV, normal));
+	float j = -(1 + restitution)*(Math::Dot(va - vb, normal));
 
-	float temp = Math::Dot(normal, normal)*((1 / A->mass) + (1 / B->mass));
+	float temp = ((1 / A->mass) + (1 / B->mass));
 
-	//Something wrong with temp1 and temp2
-	//Maybe should reserve negative sign after squaring as temp1 and temp2 allow for cancelling
-
-	double temp1 = ((Math::Dot(Math::Perpendicular(rA), normal)) * (Math::Dot(Math::Perpendicular(rA), normal))) / IA;
-	double temp2 = ((Math::Dot(Math::Perpendicular(rB), normal)) * (Math::Dot(Math::Perpendicular(rB), normal))) / IB;
+	double temp1 = (Math::Cross(rA, normal) * Math::Cross(rA, normal)) / IA;
+	double temp2 = (Math::Cross(rB, normal) * Math::Cross(rB, normal)) / IB;
 
 	j = j / (temp + temp1 + temp2);
 
 
-	A->velocity -= (j / (A->mass))*normal;
-	B->velocity += (j / (B->mass))*normal;
+	A->velocity += (j / (A->mass))*normal;
+	B->velocity -= (j / (B->mass))*normal;
 
-	A->Rvelocity += (Math::Dot((Math::Perpendicular(rA)), j * normal)) / IA;
-	B->Rvelocity -= (Math::Dot((Math::Perpendicular(rB)), j * normal)) / IB;
+	A->Rvelocity += Math::Cross(rA, j*normal) / IA;
+	B->Rvelocity -= Math::Cross(rB, j*normal) / IB;
 
 
 	//FRICTION
@@ -85,7 +84,7 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	sf::Vector2f tangentVector = Math::Normalise(tangentVelocity);
 
 	//CORRECTIONS
-	float penAllow = 0.001;
+	/*float penAllow = 0.001;
 	float percent = 0.2;
 
 	float q = std::max(cp[0].depth - penAllow, 0.0f);
@@ -112,7 +111,6 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 
 	B->matrix.translate((1 / B->mass)*correction);
 
-	B->matrix.rotate(B->rotation, B->GetLocalCentre());
-
+	B->matrix.rotate(B->rotation, B->GetLocalCentre());*/
 
 }
