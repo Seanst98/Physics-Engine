@@ -57,6 +57,15 @@
     <ClInclude Include="SpatialGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NSquared.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -93,6 +102,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpatialGrid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NSquared.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
