@@ -12,14 +12,14 @@ public:
 	virtual void Update() = 0;
 
 	//returns a list of possibly colliding objects
-	virtual const std::list<std::pair<Object*, Object*>> &ComputePairs() = 0;
+	virtual const std::list<std::pair<Object*, Object*>> &ComputePairs(void) = 0;
 
 	//returns an object that collides with a point
 	//returns null if no object exists
 	virtual Object *Pick(const sf::Vector2f &point) const = 0;
 
 	//returns a list of objects whos AABBs collide with a query AABB
-	virtual void Query(const AABB &aabb, std::list<Object*> &output) const = 0;
+	virtual void Query(const AABB &aabb, std::vector<Object*> &output) const = 0;
 
 	//result contains the first object the ray hits
 	//result contains null if no object is hit

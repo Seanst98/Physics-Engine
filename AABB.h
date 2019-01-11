@@ -11,6 +11,8 @@ public:
 	float maxY;
 	float surfaceArea;
 
+	Object* object;
+
 	AABB() {
 		minX = 0;
 		minY = 0;
@@ -51,6 +53,14 @@ public:
 			minX <= other.maxX &&
 			maxY >= other.minY &&
 			minY <= other.maxY;
+	}
+
+	bool containsPoint(const sf::Vector2f point) const
+	{
+		return maxX >= point.x &&
+			minX <= point.x &&
+			maxY >= point.y &&
+			minY <= point.y;
 	}
 
 	AABB merge(const AABB& other) const
