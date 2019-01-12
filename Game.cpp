@@ -70,6 +70,11 @@ void Game::Start()
 	sf::Vector2f b(0, 25);
 	object3->matrix.translate(b);
 
+	object3->CalculateAABB();
+	object3->aabb->object = object3;
+
+	map.nsquared.Add(object3->aabb);
+
 	map.Add(object3);
 
 
@@ -78,6 +83,11 @@ void Game::Start()
 	object4->mass = 10000000;
 	sf::Vector2f c(1, 13);
 	object4->matrix.scale(c);
+
+	object4->CalculateAABB();
+	object4->aabb->object = object4;
+
+	map.nsquared.Add(object4->aabb);
 
 	map.Add(object4);
 
@@ -88,6 +98,11 @@ void Game::Start()
 	object5->matrix.translate(1250, 0);
 	object5->matrix.scale(d);
 
+	object5->CalculateAABB();
+	object5->aabb->object = object5;
+
+	map.nsquared.Add(object5->aabb);
+
 	map.Add(object5);
 
 	Object *object6 = new Object("quad", "wall");
@@ -96,6 +111,11 @@ void Game::Start()
 	sf::Vector2f e(23, 1);
 	object6->matrix.translate(75, 50);
 	object6->matrix.scale(e);
+
+	object6->CalculateAABB();
+	object6->aabb->object = object6;
+
+	map.nsquared.Add(object6->aabb);
 
 	map.Add(object6);
 

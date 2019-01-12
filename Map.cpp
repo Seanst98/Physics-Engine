@@ -80,56 +80,20 @@ void Map::Collisions()
 	std::list<std::pair<Object*, Object*>> pairs;
 	pairs = nsquared.ComputePairs();
 
-	/*int index1 = 0;
-	int index2 = 0;
-	
-	for (int i = 0; i < Objects.size(); i++) {
-
-		for (int j = 0; j < Objects.size(); j++) {
-			
-			if (i != j) {
-
-				SpatialGrid grid;
-
-				//if (grid.Update()) {
-					GJK gjk;
-
-					if (gjk.Check(Objects[i], Objects[j])) {
-						EPA epa;
-						epa.Update(Objects[i], Objects[j], &gjk.simplex);
-
-						Contact contacts;
-						contacts.getPoints(Objects[i], Objects[j], epa.normal, epa.depth);
-
-						Resolution resolution;
-						resolution.Update(Objects[i], Objects[j], contacts.clippedPoints, epa.normal);
-					}
-				}
-			//}
-		}
-	}
-	/*auto itr = Objects.begin();
-
-	while (itr != Objects.end()-1)
-	{
-		SpatialGrid grid;
-		grid.Update();
-
+	for (auto itr = pairs.begin(); itr != pairs.end(); ++itr) {
 		GJK gjk;
 
-		if (gjk.Check((*itr), (*itr+1)))
+		if (gjk.Check(itr->first, itr->second))
 		{
 			EPA epa;
-			epa.Update((*itr), (*itr+1), &gjk.simplex);
+			epa.Update(itr->first, itr->second, &gjk.simplex);
 
 			Contact contacts;
-			contacts.getPoints((*itr), (*itr+1), epa.normal, epa.depth);
+			contacts.getPoints(itr->first, itr->second, epa.normal, epa.depth);
 
 			Resolution resolution;
-			resolution.Update((*itr), (*itr+1), contacts.clippedPoints, epa.normal);
+			resolution.Update(itr->first, itr->second, contacts.clippedPoints, epa.normal);
 		}
-
-		itr++;
-	}*/
+	}
 }
 

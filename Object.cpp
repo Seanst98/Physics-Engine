@@ -30,16 +30,28 @@ std::vector<sf::Vector2f> Object::GetPoints()  //Return transformed points
 	return points;
 }
 
+float Object::GetInvMass()
+{
+	if (kind != "wall")
+	{
+		return 1 / mass;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 //COME BACK TO THIS AND FIX/FIND BETTER WAY
 //Get Farthest method works but unsure if more efficient
 void Object::CalculateAABB()
 {
-	/*sf::Vector2f xmax = GetFarthest(this->GetPoints(), (sf::Vector2f(1, 0)));
+	sf::Vector2f xmax = GetFarthest(this->GetPoints(), (sf::Vector2f(1, 0)));
 	sf::Vector2f xmin = GetFarthest(this->GetPoints(), (sf::Vector2f(-1, 0)));
 	sf::Vector2f ymax = GetFarthest(this->GetPoints(), (sf::Vector2f(0, 1)));
-	sf::Vector2f ymin = GetFarthest(this->GetPoints(), (sf::Vector2f(0, -1)));*/
+	sf::Vector2f ymin = GetFarthest(this->GetPoints(), (sf::Vector2f(0, -1)));
 
-	std::vector<sf::Vector2f> points = GetPoints();
+	/*std::vector<sf::Vector2f> points = GetPoints();
 	std::vector<float> pointsX;
 	std::vector<float> pointsY;
 
@@ -58,9 +70,9 @@ void Object::CalculateAABB()
 	float ymax = *ymaxit;
 
 	auto yminit = std::min_element(pointsY.begin(), pointsY.end());
-	float ymin = *yminit;
+	float ymin = *yminit;*/
 
-	AABB *aabb = new AABB(xmin-25, ymin-25, xmax+25, ymax+25);
+	AABB *aabb = new AABB(xmin.x-10, ymin.y-10, xmax.x+10, ymax.y+10);
 	aabb->object = this;
 
 	this->aabb = aabb;
@@ -103,7 +115,6 @@ sf::Vector2f Object::GetCentre()
 	int sumy = 0;
 
 	for (int i = 0; i < points.size(); i++) {
-
 		sumx = points[i].x + sumx;
 		sumy = points[i].y + sumy;
 	}
@@ -254,18 +265,31 @@ void Object::Update()
 
 		matrix.translate(velocity.x*ET, velocity.y*ET);
 
-		//velocity.y += ET * 100;
+		velocity.y += ET * 100;
 
 		matrix.rotate(rotation, GetLocalCentre());
 
 		//matrix.rotate(25 * ET, GetCentre());
 		//rotation += 25 * ET;
 
-		//float rot = Math::Magnitude(Rvelocity);a
+		//float rot = Math::Magnitude(Rvelocity);
 
 		matrix.rotate(Rvelocity*ET, GetLocalCentre());
 
+		sf::CircleShape shape(5);
+
+		shape.setFillColor(sf::Color::Green);
+		shape.setPosition(GetCentre());
+
+		Game::mainWindow.draw(shape);
+
 		rotation += Rvelocity * ET;
+
+	}
+	else {
+		velocity.x = 0;
+		velocity.y = 0;
+		Rvelocity = 0;
 	}
 
 	CalculateAABB();

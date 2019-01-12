@@ -15,6 +15,7 @@ public:
 	sf::Vector2f GetCentre();
 	sf::Vector2f GetWidthHeight();
 	void CalculateAABB();
+	float GetInvMass();
 
 	std::vector<sf::Vector2f> Hull;
 

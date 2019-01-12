@@ -42,6 +42,13 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	//velBefore * restitution = velAfter
 
 	float restitution = 0.8;
+	float closingSpeed;
+	sf::Vector2f closingSpeedtemp;
+	closingSpeedtemp = B->GetCentre() - A->GetCentre();
+	closingSpeed = -(Math::Dot((B->velocity - A->velocity), closingSpeedtemp) / Math::Magnitude(closingSpeedtemp));
+	if (closingSpeed < 1) {
+		restitution = 0;
+	}
 
 	//REDO OF ANGULAR CALCULATION
 
@@ -64,7 +71,8 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 
 	float j = -(1 + restitution)*(Math::Dot(va - vb, normal));
 
-	float temp = ((1 / A->mass) + (1 / B->mass));
+	//float temp = ((1 / A->mass) + (1 / B->mass));
+	float temp = A->GetInvMass() + B->GetInvMass();
 
 	double temp1 = (Math::Cross(rA, normal) * Math::Cross(rA, normal)) / IA;
 	double temp2 = (Math::Cross(rB, normal) * Math::Cross(rB, normal)) / IB;
@@ -72,8 +80,10 @@ void Resolution::Update(Object* A, Object* B, std::vector<ClippedPoint> cp, sf::
 	j = j / (temp + temp1 + temp2);
 
 
-	A->velocity += (j / (A->mass))*normal;
-	B->velocity -= (j / (B->mass))*normal;
+	//A->velocity += (j / (A->mass))*normal;
+	//B->velocity -= (j / (B->mass))*normal;
+	A->velocity += (j*A->GetInvMass()*normal);
+	B->velocity -= (j*B->GetInvMass()*normal);
 
 	A->Rvelocity += Math::Cross(rA, j*normal) / IA;
 	B->Rvelocity -= Math::Cross(rB, j*normal) / IB;

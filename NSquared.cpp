@@ -34,21 +34,9 @@ std::list<std::pair<Object*, Object*>> &NSquared::ComputePairs()
 			if (objectA == objectB)
 				continue;
 
-			std::cout << "Max Y: " << aabbA->maxY << std::endl;
-			std::cout << "Max Y: " << aabbB->maxY << std::endl;
-			
-			std::cout << "Min Y: " << aabbA->minY << std::endl;
-			std::cout << "Min Y: " << aabbB->minY << std::endl;
-
-			//std::cout << "x1: " << objectA->GetPoints()[0].x << std::endl;
-			//std::cout << "y1: " << objectA->GetPoints()[0].y << std::endl;
-
-			//std::cout << "x2: " << objectB->GetPoints()[0].x << std::endl;
-			//std::cout << "y2: " << objectB->GetPoints()[0].y << std::endl;
 			//add object pair
 			if (aabbA->overlaps(*aabbB))
 			{
-				std::cout << "The AABBs intersect" << std::endl;
 				m_pairs.push_back(std::make_pair(aabbA->object, aabbB->object));
 			}
 
