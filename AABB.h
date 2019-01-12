@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 
+class Object;
+
 class AABB
 {
 public:
@@ -10,8 +12,7 @@ public:
 	float maxX;
 	float maxY;
 	float surfaceArea;
-
-	Object* object;
+	Object *object;
 
 	AABB() {
 		minX = 0;
@@ -41,7 +42,7 @@ public:
 
 	bool overlaps(const AABB& other) const
 	{
-		return maxX > other.maxX &&
+		return maxX > other.minX &&
 			minX < other.maxX &&
 			maxY > other.minY &&
 			minY < other.maxY;

@@ -30,6 +30,42 @@ std::vector<sf::Vector2f> Object::GetPoints()  //Return transformed points
 	return points;
 }
 
+//COME BACK TO THIS AND FIX/FIND BETTER WAY
+//Get Farthest method works but unsure if more efficient
+void Object::CalculateAABB()
+{
+	/*sf::Vector2f xmax = GetFarthest(this->GetPoints(), (sf::Vector2f(1, 0)));
+	sf::Vector2f xmin = GetFarthest(this->GetPoints(), (sf::Vector2f(-1, 0)));
+	sf::Vector2f ymax = GetFarthest(this->GetPoints(), (sf::Vector2f(0, 1)));
+	sf::Vector2f ymin = GetFarthest(this->GetPoints(), (sf::Vector2f(0, -1)));*/
+
+	std::vector<sf::Vector2f> points = GetPoints();
+	std::vector<float> pointsX;
+	std::vector<float> pointsY;
+
+	for (int i = 0; i < points.size(); i++) {
+		pointsX.push_back(points[i].x);
+		pointsY.push_back(points[i].y);
+	}
+
+	auto xmaxit = std::max_element(pointsX.begin(), pointsX.end());
+	float xmax = *xmaxit;
+
+	auto xminit = std::min_element(pointsX.begin(), pointsX.end());
+	float xmin = *xminit;
+
+	auto ymaxit = std::max_element(pointsY.begin(), pointsY.end());
+	float ymax = *ymaxit;
+
+	auto yminit = std::min_element(pointsY.begin(), pointsY.end());
+	float ymin = *yminit;
+
+	AABB *aabb = new AABB(xmin-25, ymin-25, xmax+25, ymax+25);
+	aabb->object = this;
+
+	this->aabb = aabb;
+}
+
 sf::Vector2f Object::GetLocalCentre()
 {
 	sf::Vector2f point;
@@ -209,8 +245,6 @@ float Object::Dot(sf::Vector2f A, sf::Vector2f B)
 
 void Object::Update()
 {
-
-
 	if (kind != "wall") {
 		float rot = std::fmod(rotation, 360);
 
@@ -233,4 +267,7 @@ void Object::Update()
 
 		rotation += Rvelocity * ET;
 	}
+
+	CalculateAABB();
+
 }

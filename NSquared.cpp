@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <list>
 #include "Object.h"
 #include "NSquared.h"
@@ -11,6 +12,11 @@ std::list<std::pair<Object*, Object*>> &NSquared::ComputePairs()
 	auto end = m_aabbs.end();
 	for (auto i = m_aabbs.begin(); i != end; ++i)
 	{
+		//***************************************
+		//TODO: NEED A WAY TO UPDATE AABBS AS THEY
+		//CURRENTLY DON'T UPDATE THEIR POSITION AND 
+		//SO THEY WON'T BE DETECTED WHEN COLLIDING
+		//***************************************
 
 		//inner loop
 		auto jStart = i;
@@ -21,13 +27,28 @@ std::list<std::pair<Object*, Object*>> &NSquared::ComputePairs()
 			Object *objectA = aabbA->object;
 			Object *objectB = aabbB->object;
 
+			aabbA = aabbA->object->aabb;
+			aabbB = aabbB->object->aabb;
+
 			//skip same body collision
 			if (objectA == objectB)
 				continue;
 
+			std::cout << "Max Y: " << aabbA->maxY << std::endl;
+			std::cout << "Max Y: " << aabbB->maxY << std::endl;
+			
+			std::cout << "Min Y: " << aabbA->minY << std::endl;
+			std::cout << "Min Y: " << aabbB->minY << std::endl;
+
+			//std::cout << "x1: " << objectA->GetPoints()[0].x << std::endl;
+			//std::cout << "y1: " << objectA->GetPoints()[0].y << std::endl;
+
+			//std::cout << "x2: " << objectB->GetPoints()[0].x << std::endl;
+			//std::cout << "y2: " << objectB->GetPoints()[0].y << std::endl;
 			//add object pair
 			if (aabbA->overlaps(*aabbB))
 			{
+				std::cout << "The AABBs intersect" << std::endl;
 				m_pairs.push_back(std::make_pair(aabbA->object, aabbB->object));
 			}
 
@@ -62,7 +83,7 @@ void NSquared::Query(const AABB &aabb, std::vector<Object*> &out) const
 	}
 }
 
-/*RayCastResult NSquared::RayCast(const Ray2 &ray)
+RayCastResult NSquared::RayCast(const Ray2 &ray) const
 {
 	//test AABBs for candidates
 	std::vector<Object*> candidateList;
@@ -70,10 +91,10 @@ void NSquared::Query(const AABB &aabb, std::vector<Object*> &out) const
 
 	for (AABB *aabb : m_aabbs)
 	{
-		if (aabb->TestRay(ray))
+		/*if (aabb->TestRay(ray))
 		{
 			candidateList.push_back(aabb->object);
-		}
+		}*/
 	}
 
 	//struct for storing ray-collider test results
@@ -99,11 +120,11 @@ void NSquared::Query(const AABB &aabb, std::vector<Object*> &out) const
 		//hit point = ray.pos + t * ray.dir
 		float t;
 		sf::Vector2f normal;
-		if (object->TestRay(ray, t, normal))
+		/*if (object->TestRay(ray, t, normal))
 		{
 			ResultEntry entry = {object, t, normal };
 			resultList.push_back(entry);
-		}
+		}*/
 	}
 
 	//sort the result list
@@ -124,4 +145,4 @@ void NSquared::Query(const AABB &aabb, std::vector<Object*> &out) const
 	}
 
 	return result;
-}*/
+}

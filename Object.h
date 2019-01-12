@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "AABB.h"
 
 class Object
 {
@@ -13,6 +14,7 @@ public:
 	sf::Vector2f GetLocalCentre();
 	sf::Vector2f GetCentre();
 	sf::Vector2f GetWidthHeight();
+	void CalculateAABB();
 
 	std::vector<sf::Vector2f> Hull;
 
@@ -25,6 +27,8 @@ public:
 	std::string kind;
 	float width;
 	float height;
+	AABB* aabb;
+
 
 	sf::VertexArray *ptr;
 	sf::VertexArray *Cptr;

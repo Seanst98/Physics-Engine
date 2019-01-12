@@ -1,5 +1,20 @@
 #pragma once
 #include "AABB.h"
+#include <list>
+
+struct Ray2
+{
+	sf::Vector2f pos;
+	sf::Vector2f dir;
+};
+
+struct RayCastResult
+{
+	bool hit;
+	Object *object;
+	sf::Vector2f position;
+	sf::Vector2f normal;
+};
 
 class BroadPhase
 {
@@ -25,19 +40,4 @@ public:
 	//result contains null if no object is hit
 	virtual RayCastResult RayCast(const Ray2 &ray) const = 0;
 
-};
-
-struct Ray2
-{
-	sf::Vector2f pos;
-	sf::Vector2f dir;
-
-};
-
-struct RayCastResult
-{
-	bool hit;
-	Object *object;
-	sf::Vector2f position;
-	sf::Vector2f normal;
 };

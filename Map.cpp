@@ -5,6 +5,7 @@
 #include "Contact.h"
 #include "Resolution.h"
 #include "SpatialGrid.h"
+#include "NSquared.h"
 
 Map::Map(){}
 
@@ -76,7 +77,10 @@ void Map::UpdateAll()
 
 void Map::Collisions()
 {
-	int index1 = 0;
+	std::list<std::pair<Object*, Object*>> pairs;
+	pairs = nsquared.ComputePairs();
+
+	/*int index1 = 0;
 	int index2 = 0;
 	
 	for (int i = 0; i < Objects.size(); i++) {

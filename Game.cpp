@@ -37,6 +37,9 @@ void Game::Start()
 	object->mass = 10;
 
 	object->ID = 0;
+	object->CalculateAABB();
+	object->aabb->object = object;
+	map.nsquared.Add(object->aabb);
 
 	map.Add(object);
 
@@ -49,6 +52,10 @@ void Game::Start()
 	object2->ID = 1;
 	object2->mass = 10;
 
+	object2->CalculateAABB();
+	object2->aabb->object = object2;
+
+	map.nsquared.Add(object2->aabb);
 	map.Add(object2);
 
 

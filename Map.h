@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "Object.h"
+#include "NSquared.h"
 
 class Map
 {
@@ -19,6 +20,8 @@ public:
 	void Collisions();
 
 	std::vector<Object*> Objects;
+
+	NSquared nsquared;
 
 private:
 };
