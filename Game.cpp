@@ -47,8 +47,8 @@ void Game::Start()
 	Object *object2 = new Object("quad", "block");
 
 	object2->matrix.translate(500, 400);
-	object2->matrix.rotate(5);
-	object2->rotation += 5;
+	//object2->matrix.rotate(25);
+	//object2->rotation += 25;
 	object2->ID = 1;
 	object2->mass = 10;
 
@@ -180,8 +180,46 @@ void Game::GameLoop()
 						object->ID = noobjects;
 						object->mass = 10;
 
+						object->CalculateAABB();
+						object->aabb->object = object;
+
+						map.nsquared.Add(object->aabb);
+
 						map.Add(object);
 					}
+					if (currentEvent.key.code == sf::Keyboard::P)
+					{
+						Object *object = new Object("przemek", "block");
+
+						object->matrix.translate(500, 400);
+						//object->matrix.rotate(30);
+						//object->rotation += 30;
+						object->mass = 100;
+
+						object->ID = noobjects;
+						object->CalculateAABB();
+						object->aabb->object = object;
+						map.nsquared.Add(object->aabb);
+
+						map.Add(object);
+					}
+					if (currentEvent.key.code == sf::Keyboard::T)
+					{
+						Object *object = new Object("triangle", "block");
+
+						object->matrix.translate(500, 400);
+						//object->matrix.rotate(30);
+						//object->rotation += 30;
+						object->mass = 100;
+
+						object->ID = noobjects;
+						object->CalculateAABB();
+						object->aabb->object = object;
+						map.nsquared.Add(object->aabb);
+
+						map.Add(object);
+					}
+
 				}
 
 			}

@@ -84,6 +84,7 @@ sf::Vector2f Object::GetLocalCentre()
 
 	std::vector<sf::Vector2f> points;
 	points = Game::resManager.GetPoints(type);
+	//points = GetPoints(
 
 	int sumx = 0;
 	int sumy = 0;
@@ -256,6 +257,7 @@ float Object::Dot(sf::Vector2f A, sf::Vector2f B)
 
 void Object::Update()
 {
+
 	if (kind != "wall") {
 		float rot = std::fmod(rotation, 360);
 
@@ -265,23 +267,11 @@ void Object::Update()
 
 		matrix.translate(velocity.x*ET, velocity.y*ET);
 
-		velocity.y += ET * 100;
+		//velocity.y += ET * 500;
 
 		matrix.rotate(rotation, GetLocalCentre());
 
-		//matrix.rotate(25 * ET, GetCentre());
-		//rotation += 25 * ET;
-
-		//float rot = Math::Magnitude(Rvelocity);
-
 		matrix.rotate(Rvelocity*ET, GetLocalCentre());
-
-		sf::CircleShape shape(5);
-
-		shape.setFillColor(sf::Color::Green);
-		shape.setPosition(GetCentre());
-
-		Game::mainWindow.draw(shape);
 
 		rotation += Rvelocity * ET;
 

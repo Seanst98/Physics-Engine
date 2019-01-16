@@ -29,6 +29,7 @@ public:
 	float width;
 	float height;
 	AABB* aabb;
+	sf::Vector2f acceleration;
 
 
 	sf::VertexArray *ptr;
